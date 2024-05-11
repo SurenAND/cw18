@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import Info from "../Info/Info";
-import useFetch from "./hooks/useFetch";
+import { regularFetch } from "../../api/constant";
 
-const InfoList = () => {
-  const [infos, setInfos] = useState<Record<string, string | number>[]>([]);
+const InfoList = ({ infos, setInfos }: any) => {
+  const [isDelete, setIsDelete] = useState(false);
   useEffect(() => {
-    console.log("before");
-    const data: Record<string, string | number>[] = useFetch(
-      "http://localhost:5004/Task",
-      "GET"
-    );
-    console.log("after");
-    setInfos(data);
-  }, []);
+    regularFetch("Task", "GET", null).then((res: any) => {
+      setInfos(res);
+    });
+  }, [isDelete]);
 
-  const handleDelete = (id: number) => {};
+  const handleDelete = (id: number) => {
+    regularFetch(`Task/${id}`, "DELETE", null).then((res) => {
+      console.log(res);
+      setIsDelete((prev) => !prev);
+    });
+  };
 
   return (
     <div>
-      {infos.map((info) => {
+      {infos.map((info: any) => {
         return <Info key={info.id} data={info} handleDelete={handleDelete} />;
       })}
     </div>

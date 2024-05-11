@@ -1,22 +1,24 @@
 import { useState } from "react";
-import useFetch from "../InfoList/hooks/useFetch";
+import { regularFetch } from "../../api/constant";
 
-const Form = () => {
+const Form = ({ setInfos }: any) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [details, setDetails] = useState<string>("");
 
   const handleSubmit = () => {
+    const date = new Date();
     const newInfo = {
-      id: 1,
+      // id: 2,
       title: title,
       description: description,
       details: details,
-      date: "2022/02/07",
+      date: date.toLocaleDateString(),
     };
-    // console.log(newInfo);
-    const data = useFetch("http://localhost:5004/Task", "POST", newInfo);
-    console.log(data);
+    regularFetch("Task", "POST", newInfo).then((res) => {
+      console.log(res);
+      setInfos((prev: any) => [...prev, res]);
+    });
   };
 
   return (
